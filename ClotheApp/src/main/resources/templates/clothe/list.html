@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nx/thymeleaf/layout"
+	layout:decorate="~{layout/layout}">
+<head>
+<meta charset="UTF-8">
+<title>clothe list</title>
+<link rel="stylesheet" th:href="@{/css/clothe/list.css}">
+</head>
+<body>
+　　　
+	<div layout:fragment="list">
+		<a th:href="@{/index/registration}">
+			<button type="button">+新規追加</button>
+		</a>
+		<div class="list-bg">
+			<h1>list</h1>
+		</div>
+		<div th:if="${clotheList[0].clotheId == '0'}">
+		    <h2 th:text="${clotheList[0].clotheName}"></h2>
+		</div>
+
+		<div th:if="${clotheList[0].clotheId != '0'}" class="container">
+			<div class="row">
+				<div class="col-12">
+					<table class="table table-image">
+						<thead class="thead-light">
+							<tr>
+								<th class="th-width">Clothe ID</th>
+								<th class="th-width">Clothe Name</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr th:each="item:${clotheList}">
+							   
+								    <td th:text="${item.clotheId}"></td>
+								    <td th:text="${item.clotheName}"></td>
+								    <td>
+								         <form th:action="@{/index}" method="post">
+                                             <input type="hidden" name="id" th:value="${item.clotheId}">
+                                             <input type="hidden" name="clotheName" th:value="${item.clotheName}">
+                                             <input type="submit" value="detail">
+				                         </form>
+				                    </td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+			</div>
+		</div>
+
+	</div>
+
+</body>
+</html>

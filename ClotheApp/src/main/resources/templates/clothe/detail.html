@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{layout/layout}">
+<link rel="stylesheet" th:href="@{/css/clothe/detail.css}">
+<head>
+<meta charset="UTF-8">
+<title>clothe detail</title>
+</head>
+<body>
+	<div layout:fragment="detail">
+		<div class="detail">
+			<h1>detail</h1>
+		</div>
+		<!-- if比較条件ハードコーディング修正 -->
+		<div th:if="${clotheDetailForm.clotheId == '0'}">
+		    <h2 th:text="${clotheDetailForm.clotheName}"></h2>
+		</div>
+		<!-- if比較条件ハードコーディング修正 -->
+		<div th:if="${clotheDetailForm.clotheId != '0'}">
+			<form method="post" th:action="@{/index}"
+				th:object="${clotheDetailForm}">
+				<input type="hidden" th:field="*{clotheId}">
+				<table>
+					<tbody>
+						<tr>
+							<th>Clothe Id</th>
+							<td th:text="*{clotheId}"></td>
+						</tr>
+						<tr>
+							<th>Clothe Name</th>
+							<td>
+							<input type="text" class="form-control"
+							th:field="*{clotheName}">
+							</td>
+						</tr>
+						<tr>
+							<th>category</th>
+							<td><input type="text"></td>
+						</tr>
+						<tr>
+							<th>place</th>
+							<td><input type="text"></td>
+						</tr>
+						<tr>
+							<th>registered date</th>
+							<td><input type="text"></td>
+						</tr>
+					</tbody>
+				</table>
+				<div class="text-center">
+					<button class="btn btn-danger" type="submit" name="delete">Delete</button>
+					<button class="btn btn-primary" type="submit" name="update">Update</button>
+				</div>
+			</form>
+			
+		</div>
+	</div>
+
+</body>
+</html>

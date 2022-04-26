@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nx/thymeleaf/layout"
+	>
+<head>
+<meta charset="UTF-8">
+<title>Registration</title>
+</head>
+<body>
+    <!-- <form>
+    <input type="text>
+    
+    </form> -->
+	<div id="wrapper">
+		<p>registration</p>
+		
+		<div class="content">
+			<form id="registration-form" method="post" th:action="@{/index/registration}" class="form-registration" th:object="${clotheRegistrationForm}">
+				<input type="file" name="upload_file" />
+				<table>
+					<tbody>
+						<tr>
+							<th>name</th>
+							<td><input type="text" th:field="*{clotheName}"></td>
+						</tr>
+						<tr>
+							<th>category</th>
+							<td><input type="text"></td>
+						</tr>
+						<tr>
+							<th>place</th>
+							<td><input type="text"></td>
+						</tr>
+						<tr>
+							<th>registered date</th>
+							<td><input type="text"></td>
+						</tr>
+					</tbody>
+				</table>
+				<button>register</button>
+			</form>
+		</div>
+	</div>
+</body>
+</html>

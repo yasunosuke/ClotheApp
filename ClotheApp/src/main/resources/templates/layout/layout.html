@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1,
+shrink-to-fit=no">
+
+<link rel="stylesheet" th:href="@{/webjars/bootstrap/css/bootstrap.min.css}">
+<link rel="stylesheet" th:href="@{/css/layout/layout.css}">
+
+<script th:src="@{/webjars/jquery/jquery.min.js}" defer></script>
+<script th:src="@{/webjars/bootstrap/js/bootstrap.min.js}" defer></script>
+
+<script type="text/javascript" th:src="@{/js/layout.js}"></script>
+<title>Insert title here</title>
+</head>
+<body>
+  <div class="parent">
+    <div class="left-column column" >
+      <div layout:replace="~{clothe/list::list}"></div>
+    </div>
+    <div class="right-column column" >
+      <div layout:replace="~{clothe/detail::detail}"></div>
+    </div>
+    
+    <!-- modal begin -->
+		<div id="my-modal" class="modal">
+			<div class="modal-content">
+				<div class="modal-header">
+					<span class="close">&times;</span>
+					<h2>Modal Header</h2>
+				</div>
+				<div class="modal-body">
+					<p>This is my modal</p>
+					<p>Lorem ipsum dolor sit amet consectetur adipisicing elit.
+						Nulla repellendus nisi, sunt consectetur ipsa velit repudiandae
+						aperiam modi quisquam nihil nam asperiores doloremque mollitia
+						dolor deleniti quibusdam nemo commodi ab.</p>
+				</div>
+				<div class="modal-footer">
+					<h3>Modal Footer</h3>
+				</div>
+			</div>
+		</div>
+		<!-- modal end -->
+  
+  </div>
+</body>
+</html>

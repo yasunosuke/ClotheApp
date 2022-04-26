@@ -1,0 +1,18 @@
+@charset "UTF-8";
+.list-bg {
+	background-color: green;
+}
+
+.container {
+  padding: 2rem 0rem;
+}
+
+h4 {
+  margin: 2rem 0rem 1rem;
+}
+
+img {
+  max-width: 100%;
+  vertical-align: middle;
+  width: 50px;
+}

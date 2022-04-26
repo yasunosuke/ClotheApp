@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!--Mapperとxmlのマッピング-->
+<mapper namespace="com.example.demo.repository.ClotheMapper">
+
+<insert id="insertOne">
+  insert into clothes(
+  clothe_id,
+  clothe_name)values(
+  #{clotheId},
+  #{clotheName})
+</insert>
+
+<select id="findMany" resultType="Clothe">
+    select * from clothes
+</select>
+
+<select id="findOne" resultType="Clothe">
+    select * from clothes where clothe_id = #{clotheId}
+</select>
+
+<select id="getMaxId" resultType="String">
+    select max(clothe_id) from clothes
+</select>
+
+<select id="getMinId" resultType="String">
+    SELECT MIN(clothe_id) FROM clothes
+</select>
+
+<update id="updateOne">
+    UPDATE clothes SET clothe_name = #{clotheName} WHERE clothe_id = #{clotheId}
+</update>
+
+<delete id="deleteOne">
+    DELETE FROM clothes WHERE clothe_id = #{clotheId}
+</delete>
+
+</mapper>
