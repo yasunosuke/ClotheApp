@@ -41,6 +41,10 @@ public class IndexController {
 		
 		model.addAttribute("clotheList", clotheList);
 		
+//		見つかった服の数
+		Integer clotheNum = clotheList.size();
+		model.addAttribute("clotheNum", clotheNum.toString());
+		
 //		詳細画面の取得
 		log.info(updatedClotheId + "updated");
 		Clothe clothe;
@@ -79,6 +83,7 @@ public class IndexController {
 	public String getClotheDetail(@ModelAttribute ClotheSearchForm form, @RequestParam("id") String str, @RequestParam("searchWord") String searchWord, Model model) {
 		
 		Clothe clothe = clotheService.getClotheOne(str);
+		
 //      byteデータを変換して登録		
 		byte[] imageBytes = clothe.getClotheImage();
 		if(imageBytes != null) {
@@ -110,6 +115,10 @@ public class IndexController {
 		Clothe c = modelMapper.map(form, Clothe.class);
 
 		List<Clothe> clotheList = clotheService.getClothes(c);
+		
+//		検索で見つかった服の数
+		Integer clotheNum = clotheList.size();
+		model.addAttribute("clotheNum", clotheNum.toString());
 
 		model.addAttribute("clotheList", clotheList);
 //		search form の検索ワード消去
@@ -156,6 +165,10 @@ public class IndexController {
 		List<Clothe> clotheList = clotheService.getClothes(clothe);
 		
 		model.addAttribute("clotheList", clotheList);
+		
+//		検索で見つかった服の数
+		Integer clotheNum = clotheList.size();
+		model.addAttribute("clotheNum", clotheNum.toString());
 		
 //		詳細画面のための取得
 //		検索したあとの最小ID値の詳細画面取得
