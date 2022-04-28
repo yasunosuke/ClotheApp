@@ -10,9 +10,24 @@
 <body>
 　　　
 	<div layout:fragment="list">
-		<a th:href="@{/index/registration}">
-			<button type="button">+新規追加</button>
-		</a>
+		<div class="new-registration">
+			<div class="new-registration-container">
+				<a th:href="@{/index/registration}">
+					<button type="button">+NEW</button>
+				</a>
+			</div>
+		</div>
+		<!-- 検索フォーム -->
+		<div class="search">
+			<div class="search-container">
+				<form action="/index" method="post" th:object="${clotheSearchForm}">
+					<input class="search-input" type="text" th:field="*{clotheName}" placeholder="キーワードを入力">
+					<input class="search-button" type="submit" value="検索" name="search">
+				</form>
+			</div>
+		</div>
+
+
 		<div class="list-bg">
 			<h1>list</h1>
 		</div>
@@ -36,9 +51,9 @@
 								    <td th:text="${item.clotheId}"></td>
 								    <td th:text="${item.clotheName}"></td>
 								    <td>
-								         <form th:action="@{/index}" method="post">
+								         <form action="/index" method="post">
                                              <input type="hidden" name="id" th:value="${item.clotheId}">
-                                             <input type="hidden" name="clotheName" th:value="${item.clotheName}">
+                                             <input type="hidden" name="searchWord" th:value="${clotheSearchForm.clotheName}">
                                              <input type="submit" value="detail">
 				                         </form>
 				                    </td>

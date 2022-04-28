@@ -16,3 +16,22 @@ img {
   vertical-align: middle;
   width: 50px;
 }
+
+/* search box */
+.search-container {
+	width: 100%;
+	background-color: red;
+}
+
+.search-input {
+	width: 70%;
+	
+}
+
+.search-button {
+	width: 30%;
+}
+
+.search-button:hover {
+	background: #bfbfbf;
+}

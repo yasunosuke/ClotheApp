@@ -11,12 +11,26 @@ shrink-to-fit=no">
 
 <script th:src="@{/webjars/jquery/jquery.min.js}" defer></script>
 <script th:src="@{/webjars/bootstrap/js/bootstrap.min.js}" defer></script>
-
-<script type="text/javascript" th:src="@{/js/layout.js}"></script>
 <title>Insert title here</title>
 </head>
 <body>
-  <div class="parent">
+
+	<header>
+		<h1>2 column layout</h1>
+	</header>
+	<section id="main">
+		<div class="left">
+			<div layout:replace="~{clothe/list::list}"></div>
+		</div>
+		<div class="right">
+			<div layout:replace="~{clothe/detail::detail}"></div>
+		</div>
+	</section>
+	<footer>
+		<p>footer.com</p>
+	</footer>
+
+	<!-- <div class="parent">
     <div class="left-column column" >
       <div layout:replace="~{clothe/list::list}"></div>
     </div>
@@ -24,7 +38,9 @@ shrink-to-fit=no">
       <div layout:replace="~{clothe/detail::detail}"></div>
     </div>
     
-    <!-- modal begin -->
+    
+    
+    modal begin
 		<div id="my-modal" class="modal">
 			<div class="modal-content">
 				<div class="modal-header">
@@ -43,8 +59,8 @@ shrink-to-fit=no">
 				</div>
 			</div>
 		</div>
-		<!-- modal end -->
+		modal end
   
-  </div>
+  </div> -->
 </body>
 </html>

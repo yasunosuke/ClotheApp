@@ -2,11 +2,12 @@ package com.example.demo.service;
 
 import java.util.List;
 
+import com.example.demo.model.Category;
 import com.example.demo.model.Clothe;
 
 public interface ClotheService {
 	
-	public List<Clothe> getClothes();
+	public List<Clothe> getClothes(Clothe clothe);
 	
 	public Clothe getClotheOne(String clotheId);
 	
@@ -16,7 +17,13 @@ public interface ClotheService {
 	
 	public String getMinId();
 	
-	public void updateClotheOne(String clotheId, String clotheName);
+	public void updateClotheOne(Clothe clothe);
 	
 	public void deleteClotheOne(String clotheId);
+	
+	public List<Category> getAllCategories();
+	
+	public Category getOneCategory(String profileCategoryId);
+	
+	public List<Category> getAllCategoriesExceptOne(String excludedId);
 }

@@ -5,13 +5,14 @@
 <head>
 <meta charset="UTF-8">
 <title>Registration</title>
+<link rel="stylesheet" th:href="@{/css/clothe/registration.css}">
 </head>
 <body>
     <!-- <form>
     <input type="text>
     
     </form> -->
-	<div id="wrapper">
+<!-- 	<div id="wrapper">
 		<p>registration</p>
 		
 		<div class="content">
@@ -28,7 +29,7 @@
 							<td><input type="text"></td>
 						</tr>
 						<tr>
-							<th>place</th>
+							<th>storage</th>
 							<td><input type="text"></td>
 						</tr>
 						<tr>
@@ -40,6 +41,45 @@
 				<button>register</button>
 			</form>
 		</div>
-	</div>
+	</div> -->
+<!-- enctype="multipart/form-data" -->	
+	<form id="registration-form" method="post" th:action="@{/index/registration}" class="form-registration" th:object="${clotheRegistrationForm}" enctype="multipart/form-data">
+    <!-- class="text-center" th:text="#{user.signup.title}" --> 
+    <h1>registration</h1>
+    
+    <input type="file" name="upload-clothe-image" />
+    
+    <div class="form-group">
+      <label for="userId" th:text="#{clothe.clotheName}">clotheName</label>
+      
+      <input type="text" class="form-control" th:field="*{clotheName}" th:errorclass="is-invalid">
+      <div class="invalid-feedback" th:errors="*{clotheName}"></div>
+      <!-- 上が出来ない場合下を試す -->
+      <!-- <div class="danger" th:if="${#fields.hasError('clotheName')}" th:errors="*{clotheName}"></div> -->
+    </div>
+    <!-- ドロップダウン -->
+    <div class="form-group">
+      <label for="category" th:text="#{clothe.cateagory}">category</label>
+      <!-- <input type="text" class="form-control" th:field="*{category}"> -->
+      <select name="drop-down-category-registration">
+        <option th:each="item:${categoryList}" th:text="${item.categoryName}" th:value="${item.categoryId}"></option>
+      </select>
+      <!-- <div class="invalid-feedback" th:errors="*{password}"></div> -->
+    </div>
+    
+    <div class="form-group">
+      <label for="storage" th:text="#{clothe.storage}">storage</label>
+      <input type="text" class="form-control" th:field="*{storage}" th:errorclass="is-invalid">
+      <div class="invalid-feedback" th:errors="*{storage}"></div>
+    </div>
+    
+    <!-- <div class="form-group">
+      <label for="registered-date" th:text="#{clothe.registeredDate}">registered date</label>
+      <input type="text" class="form-control" placeholder="yyyy/MM/dd" th:field="*{registeredDate}" th:errorclass="is-invalid">
+      <div class="invalid-feedback" th:errors="*{registeredDate}"></div>
+    </div> -->
+    
+    <input type="submit" th:value="#{clothe.registration.form.button}">
+  </form>
 </body>
 </html>

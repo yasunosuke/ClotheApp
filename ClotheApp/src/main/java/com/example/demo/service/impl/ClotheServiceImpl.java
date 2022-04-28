@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.example.demo.model.Category;
 import com.example.demo.model.Clothe;
 import com.example.demo.repository.ClotheMapper;
 import com.example.demo.service.ClotheService;
@@ -16,15 +17,15 @@ public class ClotheServiceImpl implements ClotheService{
 	private ClotheMapper mapper;
 	
 	@Override
-	public List<Clothe> getClothes() {
+	public List<Clothe> getClothes(Clothe clothe) {
 //		nullが帰ってきた場合は？
-		List<Clothe> clothes = mapper.findMany();
+		List<Clothe> clothes = mapper.findMany(clothe);
 		
 		if(clothes.isEmpty()) {
-			Clothe clothe = new Clothe();
-			clothe.setClotheName("No Data");
-			clothe.setClotheId("0");
-			clothes.add(clothe);
+			Clothe c = new Clothe();
+			c.setClotheName("No Data");
+			c.setClotheId("0");
+			clothes.add(c);
 			return clothes;
 		} else {
 			return clothes;
@@ -75,8 +76,8 @@ public class ClotheServiceImpl implements ClotheService{
 	}
 
 	@Override
-	public void updateClotheOne(String clotheId, String clotheName) {
-		mapper.updateOne(clotheId, clotheName);
+	public void updateClotheOne(Clothe clothe) {
+		mapper.updateOne(clothe);
 		
 	}
 
@@ -85,6 +86,26 @@ public class ClotheServiceImpl implements ClotheService{
 		int count = mapper.deleteOne(clotheId);
 		
 	}
+
+	@Override
+	public List<Category> getAllCategories() {
+		// TODO Auto-generated method stub
+		return mapper.getAllCategories();
+	}
+
+	@Override
+	public Category getOneCategory(String categoryId) {
+		// TODO Auto-generated method stub
+		return mapper.getOneCategory(categoryId);
+	}
+
+	@Override
+	public List<Category> getAllCategoriesExceptOne(String excludedId) {
+		// TODO Auto-generated method stub
+		return mapper.getAllCategoriesExceptOne(excludedId);
+	}
+	
+	
 	
 	
 	

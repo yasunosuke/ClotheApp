@@ -8,13 +8,28 @@
 <insert id="insertOne">
   insert into clothes(
   clothe_id,
-  clothe_name)values(
+  clothe_image,
+  clothe_name,
+  category_id,
+  storage,
+  registered_date
+  )values(
   #{clotheId},
-  #{clotheName})
+  #{clotheImage},
+  #{clotheName},
+  #{categoryId},
+  #{storage},
+  CURRENT_DATE())
+  
 </insert>
 
 <select id="findMany" resultType="Clothe">
     select * from clothes
+    <where>
+      <if test="clotheName != null">
+        clothe_name LIKE '%' || #{clotheName} || '%'
+      </if>
+    </where>
 </select>
 
 <select id="findOne" resultType="Clothe">
@@ -30,11 +45,22 @@
 </select>
 
 <update id="updateOne">
-    UPDATE clothes SET clothe_name = #{clotheName} WHERE clothe_id = #{clotheId}
+    UPDATE clothes SET clothe_name = #{clotheName}, category_id = #{categoryId}, storage = #{storage} WHERE clothe_id = #{clotheId}
 </update>
 
 <delete id="deleteOne">
     DELETE FROM clothes WHERE clothe_id = #{clotheId}
 </delete>
 
+<select id="getAllCategories" resultType="Category">
+    SELECT * FROM categories
+</select>
+
+<select id="getOneCategory" resultType="Category">
+    SELECT * FROM categories WHERE category_id = #{categoryId}
+</select>
+
+<select id="getAllCategoriesExceptOne" resultType="Category">
+    SELECT * FROM categories WHERE category_id != #{excludedId}
+</select>
 </mapper>

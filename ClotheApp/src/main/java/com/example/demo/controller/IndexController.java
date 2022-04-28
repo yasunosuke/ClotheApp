@@ -1,5 +1,6 @@
 package com.example.demo.controller;
 
+import java.util.Base64;
 import java.util.List;
 
 import org.modelmapper.ModelMapper;
@@ -10,13 +11,18 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.example.demo.form.ClotheDetailForm;
 import com.example.demo.form.ClotheSearchForm;
+import com.example.demo.model.Category;
 import com.example.demo.model.Clothe;
 import com.example.demo.service.ClotheService;
 
+import lombok.extern.slf4j.Slf4j;
+
 @Controller
+@Slf4j
 public class IndexController {
 	
 	@Autowired
@@ -25,15 +31,10 @@ public class IndexController {
 	@Autowired
 	private ModelMapper modelMapper;
 	
-//	@GetMapping("/index")
-//	public String getIndex() {
-//		return "layout/layout";
-//	}
-	
 	@GetMapping("/index")
-	public String getClotheList(@ModelAttribute ClotheSearchForm form,Model model) {
+	public String getClotheList(@ModelAttribute ClotheSearchForm form, Model model, @ModelAttribute("updatedClotheId") String updatedClotheId) {
 		
-//		リストの取得
+//		すべてのclothesの行を取得
 		Clothe c = modelMapper.map(form, Clothe.class);
 		
 		List<Clothe> clotheList = clotheService.getClothes(c);
@@ -41,11 +42,33 @@ public class IndexController {
 		model.addAttribute("clotheList", clotheList);
 		
 //		詳細画面の取得
-		Clothe clothe = clotheService.getClotheOne(clotheService.getMinId());
+		log.info(updatedClotheId + "updated");
+		Clothe clothe;
+		if(updatedClotheId.equals("")) {
+			clothe = clotheService.getClotheOne(clotheService.getMinId());
+		} else {
+			clothe = clotheService.getClotheOne(updatedClotheId);
+		}
+		
+		updatedClotheId = "";
+		
+//		Clothe clothe = clotheService.getClotheOne(clotheService.getMinId());
+		
+		byte[] imageBytes = clothe.getClotheImage();
+		if(imageBytes != null) {
+			String base64Data = Base64.getEncoder().encodeToString(imageBytes);
+			model.addAttribute("clotheProfileImage", base64Data);
+		}
 		
 		ClotheDetailForm clotheDetailForm = modelMapper.map(clothe, ClotheDetailForm.class);
 		
 		model.addAttribute("clotheDetailForm", clotheDetailForm);
+		
+		addAttributeForDropDownMenu(model, clotheDetailForm);
+		
+		
+		
+		
 		
 		return "layout/layout";
 	}
@@ -56,10 +79,18 @@ public class IndexController {
 	public String getClotheDetail(@ModelAttribute ClotheSearchForm form, @RequestParam("id") String str, @RequestParam("searchWord") String searchWord, Model model) {
 		
 		Clothe clothe = clotheService.getClotheOne(str);
+//      byteデータを変換して登録		
+		byte[] imageBytes = clothe.getClotheImage();
+		if(imageBytes != null) {
+			String base64Data = Base64.getEncoder().encodeToString(imageBytes);
+			model.addAttribute("clotheProfileImage", base64Data);
+		}
 		
 		ClotheDetailForm clotheDetailForm = modelMapper.map(clothe, ClotheDetailForm.class);
 		
 		model.addAttribute("clotheDetailForm", clotheDetailForm);
+		
+		addAttributeForDropDownMenu(model, clotheDetailForm);
 		
 //		リストを取得　ここがおかしい
 //		Clothe c = new Clothe();
@@ -88,9 +119,22 @@ public class IndexController {
 	}
 	
 	@PostMapping(value = "/index", params = "update")
-	public String updateClotheOne(ClotheDetailForm form, Model model) {
+	public String updateClotheOne(ClotheDetailForm form, Model model, @RequestParam("drop") String drop, RedirectAttributes redirectAttributes) {
 		
-		clotheService.updateClotheOne(form.getClotheId(), form.getClotheName());
+//		log.info(form.toString());
+//		log.info(drop + "drop");
+		
+//		まだよくわからない
+		redirectAttributes.addFlashAttribute("updatedClotheId", form.getClotheId());
+		
+		if(!drop.equals(form.getCategoryId())) {
+			form.setCategoryId(drop);
+		}
+		
+		Clothe clothe = modelMapper.map(form, Clothe.class);
+		
+//		clotheService.updateClotheOne(form.getClotheId(), form.getClotheName(), form.getCategoryId(), form.);
+		clotheService.updateClotheOne(clothe);
 		
 		return "redirect:/index";
 	}
@@ -114,23 +158,36 @@ public class IndexController {
 		model.addAttribute("clotheList", clotheList);
 		
 //		詳細画面のための取得
-//		検索したあとの最小ID値の詳細画面取得実装していない
-		
+//		検索したあとの最小ID値の詳細画面取得
 		Clothe clotheForDetail = clotheList.get(0);
+		
+		byte[] imageBytes = clotheForDetail.getClotheImage();
+		if(imageBytes != null) {
+			String base64Data = Base64.getEncoder().encodeToString(imageBytes);
+			model.addAttribute("clotheProfileImage", base64Data);
+		}
+		
 		/* Clothe c = clotheService.getClotheOne(clotheService.getMinId()); */
 
 		ClotheDetailForm clotheDetailForm = modelMapper.map(clotheForDetail, ClotheDetailForm.class);
 
 		model.addAttribute("clotheDetailForm", clotheDetailForm);
 		
+		addAttributeForDropDownMenu(model, clotheDetailForm);
+		
 		return "layout/layout";
 	}
-	
-//	@PostMapping("/index")
-//	public String postRequest(@RequestParam("") String str, Model model) {
-//		
-//		model.addAttribute("sample", str);
-//		
-//		return "layout/layout";
-//	}
+
+//drop down menu のための
+	private void addAttributeForDropDownMenu(Model model, ClotheDetailForm clotheDetailForm) {
+
+//		詳細画面に表示するprofileのcategoryIdとcategoryNameを取得してmodelに登録
+		String profileCategoryId = clotheDetailForm.getCategoryId();
+		Category profileCategory = clotheService.getOneCategory(profileCategoryId);
+		model.addAttribute("profileCategory", profileCategory);
+
+//		詳細画面に表示するprofile以外全てのcategoryのrowを取得してmodelに登録する
+		List<Category> allCategories = clotheService.getAllCategoriesExceptOne(profileCategoryId);
+		model.addAttribute("categoryList", allCategories);
+	}
 }
