@@ -79,7 +79,7 @@ public class IndexController {
 		
 
 //リストの詳細ボタンを押して詳細画面を表示する	
-	@PostMapping("/index")
+	@PostMapping(value = "/index", params = "detail")
 	public String getClotheDetail(@ModelAttribute ClotheSearchForm form, @RequestParam("id") String str, @RequestParam("searchWord") String searchWord, Model model) {
 		
 		Clothe clothe = clotheService.getClotheOne(str);
