@@ -1,0 +1,13 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>Error</title>
+</head>
+<body>
+  <h1 th:text="${status} + '' + ${error}"></h1>
+  <p th:text="${message}"></p>
+  <p>Please Return To Top Page</p>
+  <a th:href="@{/index}"><button> Go Back To Top Page</button></a>
+</body>
+</html>
