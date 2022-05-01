@@ -1,14 +1,84 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org"
-	xmlns:layout="http://www.ultraq.net.nx/thymeleaf/layout"
-	>
+	xmlns:layout="http://www.ultraq.net.nx/thymeleaf/layout">
 <head>
 <meta charset="UTF-8">
 <title>Registration</title>
 <link rel="stylesheet" th:href="@{/css/clothe/registration.css}">
+<lin rel="stylesheet" th:href="@{/css/reset.css}">
 </head>
 <body>
-    <!-- <form>
+	<div class="wrap">
+		<div class="content">
+		    <div class="main">
+		        <div class="form-header">
+		        <h1>Registration</h1>
+		        <p>Register your clothes to manage your closets.</p>
+		        
+		        <form id="registration-form" method="post"
+				th:action="@{/index/registration}" class="form-registration"
+				th:object="${clotheRegistrationForm}" enctype="multipart/form-data">
+				<!-- class="text-center" th:text="#{user.signup.title}" -->
+
+				<div class="form-group">
+				    <input type="file" name="upload-clothe-image" class="form-control file-input" />
+				</div>
+				
+
+				<div class="form-group">
+					<label for="userId" ><!-- clotheName --></label>
+					<!-- th:text="#{clothe.clotheName}" -->
+
+					<input type="text" class="form-control" th:field="*{clotheName}"
+						th:errorclass="is-invalid" th:placeholder="#{clothe.clotheName}">
+					<div class="invalid-feedback" th:errors="*{clotheName}"></div>
+					<!-- 上が出来ない場合下を試す -->
+					<!-- <div class="danger" th:if="${#fields.hasError('clotheName')}" th:errors="*{clotheName}"></div> -->
+				</div>
+				<!-- ドロップダウン -->
+				
+
+				<div class="form-group">
+					<label for="storage"></label>
+					<input
+						type="text" class="form-control" th:field="*{storage}"
+						th:errorclass="is-invalid" th:placeholder="#{clothe.storage}">
+					<div class="invalid-feedback" th:errors="*{storage}"></div>
+				</div>
+				
+				<div class="form-group">
+					<label for="category"></label>
+					<!-- <input type="text" class="form-control" th:field="*{category}"> -->
+					<select name="drop-down-category-registration" class="form-control">
+						<option th:each="item:${categoryList}"
+							th:text="${item.categoryName}" th:value="${item.categoryId}"></option>
+					</select>
+					<!-- <div class="invalid-feedback" th:errors="*{password}"></div> -->
+				</div>
+
+				<!-- <div class="form-group">
+      <label for="registered-date" th:text="#{clothe.registeredDate}">registered date</label>
+      <input type="text" class="form-control" placeholder="yyyy/MM/dd" th:field="*{registeredDate}" th:errorclass="is-invalid">
+      <div class="invalid-feedback" th:errors="*{registeredDate}"></div>
+    </div> -->
+                <!-- button -->
+				<input type="submit" th:value="#{clothe.registration.form.button}" class="registration-button">
+				
+			</form>
+			
+			<div class="form-footer">
+			<p>By continuing, you agree to our Terms of Service and acknowledge you've read our <a href="#">Privacy Policy</a></p>
+			    <p>closet.co.jp</p>
+			</div> 
+		    </div>
+		    
+		    
+			 
+		    </div>
+		    
+		</div>
+	</div>
+	<!-- <form>
     <input type="text>
     
     </form> -->
@@ -43,43 +113,6 @@
 		</div>
 	</div> -->
 <!-- enctype="multipart/form-data" -->	
-	<form id="registration-form" method="post" th:action="@{/index/registration}" class="form-registration" th:object="${clotheRegistrationForm}" enctype="multipart/form-data">
-    <!-- class="text-center" th:text="#{user.signup.title}" --> 
-    <h1>registration</h1>
-    
-    <input type="file" name="upload-clothe-image" />
-    
-    <div class="form-group">
-      <label for="userId" th:text="#{clothe.clotheName}">clotheName</label>
-      
-      <input type="text" class="form-control" th:field="*{clotheName}" th:errorclass="is-invalid">
-      <div class="invalid-feedback" th:errors="*{clotheName}"></div>
-      <!-- 上が出来ない場合下を試す -->
-      <!-- <div class="danger" th:if="${#fields.hasError('clotheName')}" th:errors="*{clotheName}"></div> -->
-    </div>
-    <!-- ドロップダウン -->
-    <div class="form-group">
-      <label for="category" th:text="#{clothe.cateagory}">category</label>
-      <!-- <input type="text" class="form-control" th:field="*{category}"> -->
-      <select name="drop-down-category-registration">
-        <option th:each="item:${categoryList}" th:text="${item.categoryName}" th:value="${item.categoryId}"></option>
-      </select>
-      <!-- <div class="invalid-feedback" th:errors="*{password}"></div> -->
-    </div>
-    
-    <div class="form-group">
-      <label for="storage" th:text="#{clothe.storage}">storage</label>
-      <input type="text" class="form-control" th:field="*{storage}" th:errorclass="is-invalid">
-      <div class="invalid-feedback" th:errors="*{storage}"></div>
-    </div>
-    
-    <!-- <div class="form-group">
-      <label for="registered-date" th:text="#{clothe.registeredDate}">registered date</label>
-      <input type="text" class="form-control" placeholder="yyyy/MM/dd" th:field="*{registeredDate}" th:errorclass="is-invalid">
-      <div class="invalid-feedback" th:errors="*{registeredDate}"></div>
-    </div> -->
-    
-    <input type="submit" th:value="#{clothe.registration.form.button}">
-  </form>
+	
 </body>
 </html>

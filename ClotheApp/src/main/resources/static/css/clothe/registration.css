@@ -1,1 +1,96 @@
 @charset "UTF-8";
+
+body {
+  margin: 0;
+  padding: 0;
+  /* background-color: #cccccc; */
+  /* color: #333333; */
+  font-size: 15px;
+  line-height: 2;
+  background-image: url(../../images/RegiBackImage2.jpg);
+  background-repeat: no-repeat;
+  background-position: center top;
+  background-attachment: fixed;
+  background-size: 100% auto;
+}
+
+.wrap {
+	/* background-color: red; */
+}
+/* border入れる */
+.content {
+  width: 350px;
+  height: 650px;
+  /* float: right; */
+  margin: 0 auto;
+  background-color: #eeeeee;
+  text-align: center;
+  border-radius: 5px;
+}
+
+.main {
+	width: 270px;
+	margin: auto;
+	/* background-color: red; */
+}
+
+.form-header h1 {
+	font-size: 35px;
+}
+
+.form-registration {
+	width: 270px;
+	/* background-color: green; */
+	margin: auto;
+	font-size: 20px;
+}
+
+.form-group {
+	/* width: 270px; */
+	/* background-color: blue; */
+	/* margin-bottom: 10px; */
+	/* margin: 0 auto 10px auto; */
+}
+
+.form-control {
+	width: 260px;
+	height: 30px;
+	text-align: center;
+}
+
+.file-input {
+	margin-left: 0;
+	font-size: 15px;
+}
+
+.form-group select {
+	width: 100px;
+}
+
+.registration-button {
+	background-color: #009cd3;
+	color: #ffffff;
+	font-size: 20px;
+	width: 100px;
+	display: block;
+	text-align: center;
+	border-radius: 5px;
+	margin: auto;
+	line-height: 30px;
+	border: 3px solid #009cd3;
+	margin-top: 10px;
+}
+
+.registration-button:hover {
+	text-decoration: none;
+	background-color: #ffffff;
+	color: #009cd3;
+}
+
+.form-footer {
+	/* background-color: yellow; */
+}
+
+
+
+
