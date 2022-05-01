@@ -1,2 +1,103 @@
 @charset "UTF-8";
 
+.profile-wrap {
+	/* background-color: purple; */
+	height: 750px;
+}
+
+.profile-content {
+	
+	/* background-color: green; */
+}
+
+.profile-container {
+	height: 750px;
+	/* background-color: yellow; */
+	display: flex;
+    justify-content: center; /*左右中央揃え*/
+    align-items: center; 
+}
+
+/* profile-form {
+	text-align: center;
+} */
+
+.profile-pic-container {
+ height: 300px;
+ width: 300px;
+ margin: auto;
+ text-align: center;
+}
+
+.profile-pic {
+	border-radius: 50%;
+	max-width: 100%;
+	max-height: 100%;
+	 display: block;
+	 margin: auto;
+}
+
+.profile-table {
+	margin: auto;
+	/* background-color: green; */
+	margin-top: 20px;
+}
+
+.profile-table th {
+	font-size: 25px;
+	text-align: right;
+	padding-right: 10px;
+}
+
+.profile-table td {
+	font-size: 20px;
+}
+
+.profile-table input {
+	height: 35px;
+	width: 250px
+}
+
+.buttons {
+	margin-top: 15px;
+}
+
+.btn-delete {
+	background-color: red;
+	color: #ffffff;
+	font-size: 20px;
+	width: 100px;
+	/* display: block; */
+	text-align: center;
+	border-radius: 5px;
+	/* margin: auto; */
+	line-height: 30px;
+	border: 3px solid red;
+	margin-top: 10px;
+}
+
+.btn-delete:hover {
+	text-decoration: none;
+	background-color: #ffffff;
+	color: red;
+}
+
+.btn-update {
+	background-color: blue;
+	color: #ffffff;
+	font-size: 20px;
+	width: 100px;
+	/* display: block; */
+	text-align: center;
+	border-radius: 5px;
+	/* margin: auto; */
+	line-height: 30px;
+	border: 3px solid blue;
+	margin-top: 10px;
+}
+
+.btn-update:hover {
+	text-decoration: none;
+	background-color: #ffffff;
+	color: blue;
+}

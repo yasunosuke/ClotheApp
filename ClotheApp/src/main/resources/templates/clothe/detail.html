@@ -10,67 +10,70 @@
 </head>
 <body>
 	<div layout:fragment="detail">
-	<div class="right-fragment">
-		<div class="detail">
-			<h1>detail</h1>
-		</div>
-		<div class="content">
-			<div class="profile-container">
-				<!-- if比較条件ハードコーディング修正 -->
-				<div class="no-data-display" th:if="${clotheDetailForm.clotheId == '0'}">
-					<h2 th:text="${clotheDetailForm.clotheName}"></h2>
-				</div>
-				<!-- if比較条件ハードコーディング修正 -->
-				<div class="profile-form" th:if="${clotheDetailForm.clotheId != '0'}">
-					<form method="post" th:action="@{/index}"
-						th:object="${clotheDetailForm}">
-						<input type="hidden" th:field="*{clotheId}">
-						<input type="hidden" th:field="*{categoryId}">
+	    <div class="profile-wrap">
+			<div class="profile-content">
+				<div class="profile-container">
+					<!-- if比較条件ハードコーディング修正 -->
+					<div class="no-data-display"
+						th:if="${clotheDetailForm.clotheId == '0'}">
+						<h2 th:text="${clotheDetailForm.clotheName}"></h2>
+					</div>
+					<!-- if比較条件ハードコーディング修正 -->
+					<div class="profile-form"
+						th:if="${clotheDetailForm.clotheId != '0'}">
+						<form method="post" th:action="@{/index}"
+							th:object="${clotheDetailForm}">
+							<input type="hidden" th:field="*{clotheId}"> <input
+								type="hidden" th:field="*{categoryId}">
+							<!--写真  -->
 							<div class="profile-pic-container">
-								<img th:src="${'data:image/png;base64,'+ clotheProfileImage}" alt="" class="profile-pic">
+								<img th:src="${'data:image/png;base64,'+ clotheProfileImage}"
+									alt="" class="profile-pic">
 							</div>
-							
-						<table>
-							<tbody>
-								<tr>
-									<th>Clothe Id</th>
-									<td th:text="*{clotheId}"></td>
-								</tr>
-								<tr>
-									<th>Clothe Name</th>
-									<td><input type="text" class="form-control"
-										th:field="*{clotheName}"></td>
-								</tr>
-								<tr>
-									<th>Category</th>
-									<td>
-									     <select name="drop">
-												<option th:text="${profileCategory.categoryName}" th:value="${profileCategory.categoryId}"></option>
-												<option th:each="item:${categoryList}" th:text="${item.categoryName}" th:value="${item.categoryId}"></option>
-										</select>
-									</td>
-								</tr>
-								<tr>
-									<th>Storage</th>
-									<td><input type="text" th:field="*{storage}"></td>
-								</tr>
-								<tr>
-									<th>Registered Date</th>
-									<td th:text="${#dates.format(clotheDetailForm.registeredDate,'YYYY/MM/dd')}"></td>
-								</tr>
-							</tbody>
-						</table>
-						<div class="text-center">
-							<button class="btn btn-danger" type="submit" name="delete">Delete</button>
-							<button class="btn btn-primary" type="submit" name="update">Update</button>
-						</div>
-					</form>
 
+							<table class="profile-table">
+								<tbody>
+									<tr>
+										<th>Clothe Id</th>
+										<td th:text="*{clotheId}"></td>
+									</tr>
+									<tr>
+										<th>Clothe Name</th>
+										<td><input type="text" class="form-control"
+											th:field="*{clotheName}"></td>
+									</tr>
+									<tr>
+										<th>Storage</th>
+										<td><input type="text" th:field="*{storage}"></td>
+									</tr>
+									<tr>
+										<th>Registered Date</th>
+										<td
+											th:text="${#dates.format(clotheDetailForm.registeredDate,'YYYY/MM/dd')}"></td>
+									</tr>
+									<tr>
+										<th>Category</th>
+										<td><select name="drop">
+												<option th:text="${profileCategory.categoryName}"
+													th:value="${profileCategory.categoryId}"></option>
+												<option th:each="item:${categoryList}"
+													th:text="${item.categoryName}"
+													th:value="${item.categoryId}"></option>
+										</select></td>
+									</tr>
+								</tbody>
+							</table>
+							
+							<div class="buttons">
+								<button class="btn btn-update" type="submit" name="update">Update</button>
+								<button class="btn btn-delete" type="submit" name="delete">Delete</button>
+							</div>
+						</form>
+
+					</div>
 				</div>
 			</div>
 		</div>
-
-</div>
 	</div>
 
 </body>
