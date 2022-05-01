@@ -1,79 +1,120 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org"
-	xmlns:layout="http://www.ultraq.net.nx/thymeleaf/layout"
-	layout:decorate="~{layout/layout}">
+xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" 
+layout:decorate="~{layout/layout}">
 <head>
 <meta charset="UTF-8">
-<title>clothe list</title>
+<title>Clothe list</title>
 <link rel="stylesheet" th:href="@{/css/clothe/list.css}">
 </head>
 <body>
+
+
+
+
+
 　　　
 	<div layout:fragment="list">
-		<div class="new-registration">
-			<div class="new-registration-container">
-				<a th:href="@{/index/registration}">
-					<button type="button">+NEW</button>
-				</a>
-			</div>
-		</div>
-		
-		<!-- listに表示される服の総数 -->
-		<p th:text="${clotheNum + 'つのアイテム'}"></p>
-		
-		<!-- sort -->
-		
-		
-		
-		
-		<!-- 検索フォーム -->
-		<div class="search">
-			<div class="search-container">
-				<form action="/index" method="post" th:object="${clotheSearchForm}">
-					<input class="search-input" type="text" th:field="*{clotheName}" placeholder="キーワードを入力">
-					<input class="search-button" type="submit" value="検索" name="search">
-				</form>
-			</div>
-		</div>
 
+		<div class="list-wrap">
+			<div class="list-content">
+			    
+			    <div class="first-tier">
+			        <!--カテゴリー別検索  -->
+			    <div class="category-search">
+			        <div class="dropdown">
+				        <button onclick="myFunction()" class="dropbtn">Dropdown</button>
+				            <div id="myDropdown" class="dropdown-content">
+					<!-- <a href="#home">Home</a> 
+					<a href="#about">About</a> 
+					<a href="#contact">Contact</a> -->
+				            </div>
+			        </div>
+		        </div>
 
-		<div class="list-bg">
-			<h1>list</h1>
-		</div>
-		<div th:if="${clotheList[0].clotheId == '0'}">
-		    <h2 th:text="${clotheList[0].clotheName}"></h2>
-		</div>
+				<!-- 新規登録ボタン -->
+				<div class="new-registration">
+					<div class="new-registration-container">
+						<a th:href="@{/index/registration}">
+							<button type="button">+NEW</button>
+						</a>
+					</div>
+				</div>
+			    </div>
+			    
+			    <!-- 検索フォーム -->
+				<div class="search">
+					<div class="search-container">
+						<form action="/index" method="post"
+							th:object="${clotheSearchForm}">
+							<input class="search-input" type="text" th:field="*{clotheName}"
+								placeholder="キーワードを入力"> <input class="search-button"
+								type="submit" value="検索" name="search">
+						</form>
+					</div>
+				</div>
+			    
+                <div class="third-tier">
+					<!-- listに表示される服の総数 -->
+					<p class="item-count" th:text="${clotheNum + 'つのアイテム'}"></p>
 
-		<div th:if="${clotheList[0].clotheId != '0'}" class="container">
-			<div class="row">
-				<div class="col-12">
-					<table class="table table-image">
-						<thead class="thead-light">
-							<tr>
-								<th class="th-width">Clothe ID</th>
-								<th class="th-width">Clothe Name</th>
-							</tr>
-						</thead>
-						<tbody>
-							<tr th:each="item:${clotheList}">
-							   
-								    <td th:text="${item.clotheId}"></td>
-								    <td th:text="${item.clotheName}"></td>
-								    <td>
-								         <form action="/index" method="post">
-                                             <input type="hidden" name="id" th:value="${item.clotheId}">
-                                             <input type="hidden" name="searchWord" th:value="${clotheSearchForm.clotheName}">
-                                             <input type="submit" value="detail" name="detail">
-				                         </form>
-				                    </td>
-							</tr>
-						</tbody>
-					</table>
+					<!-- sort -->
+					<div class="sort">
+						<p>↑↓</p>
+					</div>
+				</div>
+                
+
+				<!-- List -->
+				<div class="clothe-list">
+					<!-- dataがない場合 -->
+					<div class="no-data" th:if="${clotheList[0].clotheId == '0'}">
+						<h2 th:text="${clotheList[0].clotheName}"></h2>
+					</div>
+					<!--list表示  -->
+					<div th:if="${clotheList[0].clotheId != '0'}" class="list">
+						<!-- <div class="row">
+					<div class="col-12"> -->
+						<table class="clothe-table">
+							<thead class="">
+								<tr>
+									<th class="clothe-category-icon th-width"></th>
+									<th th:text="#{clothe.list.clotheName}" class="th-name th-width"></th>
+									<th th:text="#{clothe.list.storage}" class="th-storage th-width"></th>
+									<!-- <th th:text="#{clothe.list.RegiDate}" class="th-regidate th-width"></th> -->
+									<th class="th-detail-button th-width"></th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr th:each="item:${clotheList}">
+									<td class="clothe-icon-td">
+									    <div th:switch="${item.categoryId}">
+											<img class="clothe-icon" th:case="1" th:src="@{/images/Pants-icon.png}">
+											<img class="clothe-icon" th:case="2" th:src="@{/images/T-shirts-icon.png}">
+											<!-- <img class="clothe-icon" th:case="2" th:src="@{/images/T-shirts-icon.png}"> -->
+											<!-- <img th:case="3" th:src=>
+											<img th:case="4" th:src=> -->
+										</div> <!-- <img th:src=""> -->
+									</td>
+									<td th:text="${item.clotheName}"></td>
+									<td th:text="${item.storage}"></td>
+									<!-- <td th:text="${#dates.format(item.registeredDate,'YYYY/MM/dd')}"></td> -->
+									<td>
+										<form action="/index" method="post">
+											<input type="hidden" name="id" th:value="${item.clotheId}">
+											<input type="hidden" name="searchWord"
+												th:value="${clotheSearchForm.clotheName}"> <input class="detail-button"
+												type="submit" value="detail" name="detail">
+										</form>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
 				</div>
 			</div>
 		</div>
-
-	</div>
+    </div>
 
 </body>
 </html>
