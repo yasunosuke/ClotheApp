@@ -42,8 +42,14 @@ public class IndexController {
 		model.addAttribute("clotheList", clotheList);
 		
 //		見つかった服の数
-		Integer clotheNum = clotheList.size();
-		model.addAttribute("clotheNum", clotheNum.toString());
+		if(clotheList.get(0).getClotheId().equals("0")) {
+			String clotheNum = "0";
+			model.addAttribute("clotheNum", clotheNum);
+		} else {
+			Integer clotheNum = clotheList.size();
+			model.addAttribute("clotheNum", clotheNum.toString());
+		}
+		
 		
 //		詳細画面の取得
 		log.info(updatedClotheId + "updated");
@@ -62,6 +68,8 @@ public class IndexController {
 		if(imageBytes != null) {
 			String base64Data = Base64.getEncoder().encodeToString(imageBytes);
 			model.addAttribute("clotheProfileImage", base64Data);
+		} else {
+			model.addAttribute("clotheProfileImage", null);
 		}
 		
 		ClotheDetailForm clotheDetailForm = modelMapper.map(clothe, ClotheDetailForm.class);
