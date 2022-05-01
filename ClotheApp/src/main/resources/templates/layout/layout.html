@@ -3,21 +3,24 @@
 xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1,
-shrink-to-fit=no">
+<!-- <meta name="viewport" content="width=device-width, initial-scale=1,
+shrink-to-fit=no"> -->
 
-<link rel="stylesheet" th:href="@{/webjars/bootstrap/css/bootstrap.min.css}">
+<!-- <link rel="stylesheet" th:href="@{/webjars/bootstrap/css/bootstrap.min.css}"> -->
 <link rel="stylesheet" th:href="@{/css/layout/layout.css}">
+<link rel="stylesheet" th:href="@{/css/clothe/list.css}">
+<link rel="stylesheet" th:href="@{/css/clothe/detail.css}">
+<link rel="stylesheet" th:href="@{/css/reset.css}">
 
 <script th:src="@{/webjars/jquery/jquery.min.js}" defer></script>
 <script th:src="@{/webjars/bootstrap/js/bootstrap.min.js}" defer></script>
-<title>Insert title here</title>
+<title>Closet App</title>
 </head>
 <body>
 
-	<header>
+	<!-- <header>
 		<h1>2 column layout</h1>
-	</header>
+	</header> -->
 	<section id="main">
 		<div class="left">
 			<div layout:replace="~{clothe/list::list}"></div>
@@ -26,9 +29,9 @@ shrink-to-fit=no">
 			<div layout:replace="~{clothe/detail::detail}"></div>
 		</div>
 	</section>
-	<footer>
+	<!-- <footer>
 		<p>footer.com</p>
-	</footer>
+	</footer> -->
 
 	<!-- <div class="parent">
     <div class="left-column column" >
