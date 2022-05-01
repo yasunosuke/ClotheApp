@@ -48,7 +48,7 @@ layout:decorate="~{layout/layout}">
 						<form action="/index" method="post"
 							th:object="${clotheSearchForm}">
 							<input class="search-input" type="text" th:field="*{clotheName}"
-								placeholder="キーワードを入力"> <input class="search-button"
+								placeholder="Enter keyword"> <input class="search-button"
 								type="submit" value="検索" name="search">
 						</form>
 					</div>
@@ -56,7 +56,7 @@ layout:decorate="~{layout/layout}">
 			    
                 <div class="third-tier">
 					<!-- listに表示される服の総数 -->
-					<p class="item-count" th:text="${clotheNum + 'つのアイテム'}"></p>
+					<p class="item-count" th:text="${clotheNum + ' items'}"></p>
 
 					<!-- sort -->
 					<div class="sort">
