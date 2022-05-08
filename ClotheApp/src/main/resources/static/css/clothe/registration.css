@@ -4,24 +4,22 @@ body {
   margin: 0;
   padding: 0;
   /* background-color: #cccccc; */
-  /* color: #333333; */
   font-size: 15px;
   line-height: 2;
-  background-image: url(../../images/RegiBackImage2.jpg);
+  background-image: url(../../images/RegiBackImage.jpg);
   background-repeat: no-repeat;
   background-position: center top;
   background-attachment: fixed;
   background-size: 100% auto;
 }
 
-.wrap {
-	/* background-color: red; */
-}
+/* .wrap {
+	background-color: red;
+} */
 /* border入れる */
 .content {
   width: 350px;
   height: 650px;
-  /* float: right; */
   margin: 0 auto;
   background-color: #eeeeee;
   text-align: center;
@@ -45,12 +43,12 @@ body {
 	font-size: 20px;
 }
 
-.form-group {
-	/* width: 270px; */
-	/* background-color: blue; */
-	/* margin-bottom: 10px; */
-	/* margin: 0 auto 10px auto; */
-}
+/* .form-group {
+	width: 270px;
+	background-color: blue;
+	margin-bottom: 10px;
+	margin: 0 auto 10px auto;
+} */
 
 .form-control {
 	width: 260px;
