@@ -11,16 +11,11 @@ shrink-to-fit=no"> -->
 <link rel="stylesheet" th:href="@{/css/clothe/list.css}">
 <link rel="stylesheet" th:href="@{/css/clothe/detail.css}">
 <link rel="stylesheet" th:href="@{/css/reset.css}">
-
-<script th:src="@{/webjars/jquery/jquery.min.js}" defer></script>
-<script th:src="@{/webjars/bootstrap/js/bootstrap.min.js}" defer></script>
+<!-- JS -->
+<!-- <script th:src="@{/js/list.js}" defer></script> -->
 <title>Closet App</title>
 </head>
 <body>
-
-	<!-- <header>
-		<h1>2 column layout</h1>
-	</header> -->
 	<section id="main">
 		<div class="left">
 			<div layout:replace="~{clothe/list::list}"></div>
@@ -29,41 +24,5 @@ shrink-to-fit=no"> -->
 			<div layout:replace="~{clothe/detail::detail}"></div>
 		</div>
 	</section>
-	<!-- <footer>
-		<p>footer.com</p>
-	</footer> -->
-
-	<!-- <div class="parent">
-    <div class="left-column column" >
-      <div layout:replace="~{clothe/list::list}"></div>
-    </div>
-    <div class="right-column column" >
-      <div layout:replace="~{clothe/detail::detail}"></div>
-    </div>
-    
-    
-    
-    modal begin
-		<div id="my-modal" class="modal">
-			<div class="modal-content">
-				<div class="modal-header">
-					<span class="close">&times;</span>
-					<h2>Modal Header</h2>
-				</div>
-				<div class="modal-body">
-					<p>This is my modal</p>
-					<p>Lorem ipsum dolor sit amet consectetur adipisicing elit.
-						Nulla repellendus nisi, sunt consectetur ipsa velit repudiandae
-						aperiam modi quisquam nihil nam asperiores doloremque mollitia
-						dolor deleniti quibusdam nemo commodi ab.</p>
-				</div>
-				<div class="modal-footer">
-					<h3>Modal Footer</h3>
-				</div>
-			</div>
-		</div>
-		modal end
-  
-  </div> -->
 </body>
 </html>
