@@ -2,6 +2,8 @@ package com.example.demo.form;
 
 import java.util.Date;
 
+import com.example.demo.model.Category;
+
 import lombok.Data;
 
 @Data
