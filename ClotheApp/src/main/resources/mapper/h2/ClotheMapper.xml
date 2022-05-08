@@ -5,6 +5,20 @@
 <!--Mapperとxmlのマッピング-->
 <mapper namespace="com.example.demo.repository.ClotheMapper">
 
+<resultMap type="com.example.demo.model.Clothe" id="clothe">
+  <id column="clothe_id" property="clotheId"/>
+  <result column="clothe_name" property="clotheName"/>
+  <result column="category_id" property="categoryId"/>
+  <result column="storage" property="storage"/>
+  <result column="registered_date" property="registeredDate"/>
+  <association property="category" resultMap="category"/>
+</resultMap>
+
+<resultMap type="com.example.demo.model.Category" id="category">
+  <id column="category_id" property="categoryId"/>
+  <result column="category_name" property="categoryName"/>
+</resultMap>
+
 <insert id="insertOne">
   insert into clothes(
   clothe_id,
@@ -23,17 +37,18 @@
   
 </insert>
 
-<select id="findMany" resultType="Clothe">
-    select * from clothes
+<select id="findMany" resultMap="clothe">
+    SELECT clothe_id, clothe_name, clothes.category_id, registered_date, storage, categories.category_id, category_name FROM clothes
+    LEFT OUTER JOIN categories ON clothes.category_id = categories.category_id
     <where>
       <if test="clotheName != null">
-        clothe_name LIKE '%' || #{clotheName} || '%'
+        clothe_name LIKE CONCAT('%',#{clotheName},'%') OR categories.category_name LIKE CONCAT('%',#{clotheName},'%')
       </if>
     </where>
 </select>
 
 <select id="findOne" resultType="Clothe">
-    select * from clothes where clothe_id = #{clotheId}
+    SELECT * from clothes where clothe_id = #{clotheId}
 </select>
 
 <select id="getMaxId" resultType="String">
@@ -53,7 +68,7 @@
 </delete>
 
 <select id="getAllCategories" resultType="Category">
-    SELECT * FROM categories
+    SELECT * FROM categories ORDER BY category_name;
 </select>
 
 <select id="getOneCategory" resultType="Category">
@@ -61,6 +76,6 @@
 </select>
 
 <select id="getAllCategoriesExceptOne" resultType="Category">
-    SELECT * FROM categories WHERE category_id != #{excludedId}
+    SELECT * FROM categories WHERE category_id != #{excludedId} ORDER BY category_name
 </select>
 </mapper>

@@ -15,4 +15,5 @@ public class Clothe {
 	private String categoryId;
 	private String storage;
 	private Date registeredDate;
+	private Category category; 
 }
