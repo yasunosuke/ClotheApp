@@ -36,126 +36,101 @@ public class IndexController {
 		
 //		すべてのclothesの行を取得
 		Clothe c = modelMapper.map(form, Clothe.class);
-		
 		List<Clothe> clotheList = clotheService.getClothes(c);
-		
 		model.addAttribute("clotheList", clotheList);
 		
-//		見つかった服の数
-		if(clotheList.get(0).getClotheId().equals("0")) {
-			String clotheNum = "0";
-			model.addAttribute("clotheNum", clotheNum);
-		} else {
-			Integer clotheNum = clotheList.size();
-			model.addAttribute("clotheNum", clotheNum.toString());
-		}
-		
-		
-//		詳細画面の取得
+//		見つかったClotheの数
+		String clotheNum = getFoundItemNumber(clotheList);
+		model.addAttribute("clotheNum", clotheNum);
+
+//		詳細画面(clothe profile画面)のdata取得
 		log.info(updatedClotheId + "updated");
 		Clothe clothe;
 		if(updatedClotheId.equals("")) {
 			clothe = clotheService.getClotheOne(clotheService.getMinId());
 		} else {
-			clothe = clotheService.getClotheOne(updatedClotheId);
+			clothe = clotheService.getClotheOne(updatedClotheId);/* update後 */
 		}
-		
 		updatedClotheId = "";
 		
-//		Clothe clothe = clotheService.getClotheOne(clotheService.getMinId());
-		
-		byte[] imageBytes = clothe.getClotheImage();
-		if(imageBytes != null) {
-			String base64Data = Base64.getEncoder().encodeToString(imageBytes);
-			model.addAttribute("clotheProfileImage", base64Data);
-		} else {
-			model.addAttribute("clotheProfileImage", null);
-		}
-		
+//		詳細画面(clothe profile画面)のdataを登録
 		ClotheDetailForm clotheDetailForm = modelMapper.map(clothe, ClotheDetailForm.class);
-		
 		model.addAttribute("clotheDetailForm", clotheDetailForm);
-		
 		addAttributeForDropDownMenu(model, clotheDetailForm);
 		
+//		取得したbinaryをエンコード
+//		byte[] imageBytes = clothe.getClotheImage();
+//		if(imageBytes != null) {
+//			String base64Data = Base64.getEncoder().encodeToString(imageBytes);
+//			model.addAttribute("clotheProfileImage", base64Data);
+//		} else {
+//			model.addAttribute("clotheProfileImage", null);
+//		}
 		
-		
-		
+		model.addAttribute("clotheProfileImage", encodeClotheImage(clothe));
 		
 		return "layout/layout";
 	}
 		
-
-//リストの詳細ボタンを押して詳細画面を表示する	
+		
+//  リストの詳細ボタンを押して詳細画面を表示するためのメソッド
 	@PostMapping(value = "/index", params = "detail")
 	public String getClotheDetail(@ModelAttribute ClotheSearchForm form, @RequestParam("id") String str, @RequestParam("searchWord") String searchWord, Model model) {
 		
+//		detail button　を押したリストの行の data を取得、登録
 		Clothe clothe = clotheService.getClotheOne(str);
-		
-//      byteデータを変換して登録		
-		byte[] imageBytes = clothe.getClotheImage();
-		if(imageBytes != null) {
-			String base64Data = Base64.getEncoder().encodeToString(imageBytes);
-			model.addAttribute("clotheProfileImage", base64Data);
-		}
-		
 		ClotheDetailForm clotheDetailForm = modelMapper.map(clothe, ClotheDetailForm.class);
-		
 		model.addAttribute("clotheDetailForm", clotheDetailForm);
 		
+//      取得したbinaryデータを変換して登録		
+//		byte[] imageBytes = clothe.getClotheImage();
+//		if(imageBytes != null) {
+//			String base64Data = Base64.getEncoder().encodeToString(imageBytes);
+//			model.addAttribute("clotheProfileImage", base64Data);
+//		}
+		
+		model.addAttribute("clotheProfileImage", encodeClotheImage(clothe));
+		
+//		詳細画面の　drop down list　のためのすべての　category　取得、登録
 		addAttributeForDropDownMenu(model, clotheDetailForm);
 		
-//		リストを取得　ここがおかしい
-//		Clothe c = new Clothe();
-//
-//		List<Clothe> clotheList = clotheService.getClothes(c);
-//		
-//		model.addAttribute("clotheList", clotheList);
-//		
-//		ClotheSearchForm csf = new ClotheSearchForm();
-//		
-//		model.addAttribute("clotheSearchForm", csf);
-		
-//		検索をかけた後に二回連続detailボタン押したとき検索結果がリセットされてしまう
-		
+//      detail button 押下後も押下前の検索状態を維持するための処理
 		form.setClotheName(searchWord);
-		
 		Clothe c = modelMapper.map(form, Clothe.class);
-
 		List<Clothe> clotheList = clotheService.getClothes(c);
+		model.addAttribute("clotheList", clotheList);
 		
-//		検索で見つかった服の数
+//		検索で見つかった服の数取得、登録(list 上部に表示)
 		Integer clotheNum = clotheList.size();
 		model.addAttribute("clotheNum", clotheNum.toString());
-
-		model.addAttribute("clotheList", clotheList);
+		
 //		search form の検索ワード消去
 //		form.setClotheName(null);
 		
 		return "layout/layout";
 	}
 	
+	
+//	詳細画面のUPDATE BUTTON　押下後の更新処理のためのメソッド
 	@PostMapping(value = "/index", params = "update")
 	public String updateClotheOne(ClotheDetailForm form, Model model, @RequestParam("drop") String drop, RedirectAttributes redirectAttributes) {
 		
-//		log.info(form.toString());
-//		log.info(drop + "drop");
-		
-//		まだよくわからない
+//		更新したrowのclotheIdをgetClotheList（）に渡して詳細画面に表示するため登録(UPDATE後も同じ詳細画面にとどまるため)
 		redirectAttributes.addFlashAttribute("updatedClotheId", form.getClotheId());
 		
-		if(!drop.equals(form.getCategoryId())) {
+//		category変更のための処理
+		if (!drop.equals(form.getCategoryId())) {/* categoryを変更していた場合 */
 			form.setCategoryId(drop);
 		}
 		
 		Clothe clothe = modelMapper.map(form, Clothe.class);
-		
-//		clotheService.updateClotheOne(form.getClotheId(), form.getClotheName(), form.getCategoryId(), form.);
 		clotheService.updateClotheOne(clothe);
 		
 		return "redirect:/index";
 	}
 	
+	
+//	詳細画面の　DELETE BUTTON　押下後削除処理のためのメソッド
 	@PostMapping(value = "/index", params = "delete")
 	public String deleteClothe(ClotheDetailForm form, Model model) {
 		
@@ -164,51 +139,75 @@ public class IndexController {
 		return "redirect:/index";
 	}
 	
-//	Clothes検索処理
+	
+//	リストの検索処理のためのメソッド
 	@PostMapping(value= "/index", params = "search")
 	public String searchClotheList(@ModelAttribute ClotheSearchForm form, Model model) {
 		
+//		
 		Clothe clothe = modelMapper.map(form, Clothe.class);
-		
 		List<Clothe> clotheList = clotheService.getClothes(clothe);
-		
 		model.addAttribute("clotheList", clotheList);
 		
-//		検索で見つかった服の数
-		Integer clotheNum = clotheList.size();
-		model.addAttribute("clotheNum", clotheNum.toString());
+//		検索で見つかった服の数取得、登録
+		String clotheNum = getFoundItemNumber(clotheList);
+		model.addAttribute("clotheNum", clotheNum);
 		
-//		詳細画面のための取得
-//		検索したあとの最小ID値の詳細画面取得
+//		検索後、先頭の詳細画面取得
 		Clothe clotheForDetail = clotheList.get(0);
-		
-		byte[] imageBytes = clotheForDetail.getClotheImage();
-		if(imageBytes != null) {
-			String base64Data = Base64.getEncoder().encodeToString(imageBytes);
-			model.addAttribute("clotheProfileImage", base64Data);
-		}
-		
-		/* Clothe c = clotheService.getClotheOne(clotheService.getMinId()); */
-
 		ClotheDetailForm clotheDetailForm = modelMapper.map(clotheForDetail, ClotheDetailForm.class);
-
 		model.addAttribute("clotheDetailForm", clotheDetailForm);
 		
+//		詳細画面の　drop down list　のためのすべての　category　取得、登録
 		addAttributeForDropDownMenu(model, clotheDetailForm);
+		
+//		image取得、エンコード(clotheListのClotheにはimageが含まれていないため取得する)
+		Clothe clotheForEncode = clotheService.getClotheOne(clotheForDetail.getClotheId());
+//		byte[] imageBytes = clotheForEncode.getClotheImage();
+//		if(imageBytes != null) {
+//			String base64Data = Base64.getEncoder().encodeToString(imageBytes);
+//			model.addAttribute("clotheProfileImage", base64Data);
+//		}
+		model.addAttribute("clotheProfileImage", encodeClotheImage(clotheForEncode));
 		
 		return "layout/layout";
 	}
-
-//drop down menu のための
+	
+	
+//	詳細画面の　drop down list　のためのすべての　category　取得、登録のためのメソッド
 	private void addAttributeForDropDownMenu(Model model, ClotheDetailForm clotheDetailForm) {
-
+		
 //		詳細画面に表示するprofileのcategoryIdとcategoryNameを取得してmodelに登録
 		String profileCategoryId = clotheDetailForm.getCategoryId();
 		Category profileCategory = clotheService.getOneCategory(profileCategoryId);
 		model.addAttribute("profileCategory", profileCategory);
-
+		
 //		詳細画面に表示するprofile以外全てのcategoryのrowを取得してmodelに登録する
 		List<Category> allCategories = clotheService.getAllCategoriesExceptOne(profileCategoryId);
 		model.addAttribute("categoryList", allCategories);
 	}
+	
+	
+//	見つかったClotheの数を取得するためのメソッド	
+	private String getFoundItemNumber(List<Clothe> clotheList) {
+		
+		if(clotheList.get(0).getClotheId().equals("0")) {
+			return "0";
+		} else {
+			Integer clotheNum = clotheList.size();
+			return clotheNum.toString();
+		}
+	}
+	
+	
+	private String encodeClotheImage(Clothe clothe) {
+		byte[] imageBytes = clothe.getClotheImage();
+		if(imageBytes != null) {
+			return Base64.getEncoder().encodeToString(imageBytes);
+		} else {
+			return "no image";
+		}
+			
+	}
+	
 }
