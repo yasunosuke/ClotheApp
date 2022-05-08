@@ -1,7 +1,6 @@
 package com.example.demo.controller;
 
 import java.io.IOException;
-import java.sql.Blob;
 import java.util.List;
 
 import org.modelmapper.ModelMapper;
@@ -33,32 +32,31 @@ public class RegistrationController {
 	@Autowired
 	private ModelMapper modelMapper;
 	
+		
 	@GetMapping("/index/registration")
 	public String getRegistration(@ModelAttribute ClotheRegistrationForm form, Model model) {
 		
-		//	drop down list のための　category を取得する	
+		//	drop down list のために　category を取得する	
 		List<Category> categoryList = clotheService.getAllCategories();
 		model.addAttribute("categoryList", categoryList);
 		
 		return "clothe/registration";
 	}
-		
 	
+//  registration form に入力した値 database　に登録するためのメソッド
 	@PostMapping("/index/registration")
 	public String postClotheRegistrationForm(Model model, @ModelAttribute @Validated ClotheRegistrationForm form, 
 			BindingResult bindingResult, @RequestParam("upload-clothe-image") MultipartFile uploadedImage,
 			@RequestParam("drop-down-category-registration") String dropDownItem) {
 		
-//		入力チェック結果
+//		入力チェック時の処理
 		if(bindingResult.hasErrors()) {
 			log.info("入力チェック結果エラー");
 			return getRegistration(form, model);
 		}
 		
-		log.info(form.toString());
-		
+//		form に入力された画像をdatabaseに保存出来るように変換
 		byte[] image;
-		
 		try {
 			image = uploadedImage.getBytes();
 		} catch (IOException e) {
@@ -67,25 +65,23 @@ public class RegistrationController {
 			return getRegistration(form, model);
 		}
 		
-		
-		
 //		登録するIDを取得
 		String registrationClotheId = clotheService.getRegistrationId();
 		
+//		data　をセット
 		form.setClotheId(registrationClotheId);
-		
 		form.setClotheImage(image);
+		form.setCategoryId(dropDownItem);/* drop down で選択されたdataをset */
 		
-		form.setCategoryId(dropDownItem);
-		
+//		ClotheRegistrationForm型 を　Clothe　型に変換
 		Clothe clothe = modelMapper.map(form, Clothe.class);
-		
+//		databaseに登録
 		clotheService.registerClotheOne(clothe);
-
+		
 //		登録成功した際のメッセージ
-//		redirectAttributes.addFlashAttribute("message",
+//		redirectAttributes.addFlashAttribute("registeredSuccessMessage",
 //				"You successfully uploaded " + file.getOriginalFilename() + "!");
 		
 		return "redirect:/index";
 	}
-}
+}		
