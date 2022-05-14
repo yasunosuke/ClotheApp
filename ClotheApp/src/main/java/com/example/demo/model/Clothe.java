@@ -13,7 +13,8 @@ public class Clothe {
 	private String clotheId;
 	private String clotheName;
 	private String categoryId;
-	private String storage;
+	private String storageCode;
 	private Date registeredDate;
 	private Category category; 
+	private Storage storage;
 }
