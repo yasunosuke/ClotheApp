@@ -30,6 +30,10 @@
 	/* background-color: purple */
 }
 
+.search-input:-webkit-search-cancel-button {
+	cursor: pointer; /*  キャンセルボタンにポインターを付ける  */
+}
+
 /* .search-container {
 	margin: 15px 0px 0px 15px;
 } */
