@@ -45,7 +45,16 @@
 									</tr>
 									<tr>
 										<th th:text="#{clothe.profile.storage}"></th>
-										<td><input type="text" th:field="*{storage}"></td>
+										<td>
+										<!-- <input type="text" th:field="*{storage.storageName}"> -->
+										<input class="form-control" type="search"
+											th:field="*{storage.storageName}" list="storage"
+											autocomplete="off"> 
+											<datalist id="storage">
+												<option th:each="item:${allStorages}"
+													th:value="${item.storageName}">
+											</datalist>
+										</td>
 									</tr>
 									<tr>
 										<th th:text="#{clothe.profile.registeredDate}"></th>
@@ -55,8 +64,8 @@
 									<tr>
 										<th th:text="#{clothe.profile.category}"></th>
 										<td><select name="drop">
-												<option th:text="${profileCategory.categoryName}"
-													th:value="${profileCategory.categoryId}"></option>
+												<option th:text="*{category.categoryName}"
+													th:value="*{category.categoryId}"></option>
 												<option th:each="item:${categoryList}"
 													th:text="${item.categoryName}"
 													th:value="${item.categoryId}"></option>
