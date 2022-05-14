@@ -9,14 +9,32 @@
   <id column="clothe_id" property="clotheId"/>
   <result column="clothe_name" property="clotheName"/>
   <result column="category_id" property="categoryId"/>
-  <result column="storage" property="storage"/>
+  <result column="storage_code" property="storageCode"/>
   <result column="registered_date" property="registeredDate"/>
   <association property="category" resultMap="category"/>
+  <association property="storage" resultMap="storage"/>
+</resultMap>
+
+<!--画像あり-->
+<resultMap type="com.example.demo.model.Clothe" id="clotheOne">
+  <id column="clothe_id" property="clotheId"/>
+  <result column="clothe_image" property="clotheImage"/>
+  <result column="clothe_name" property="clotheName"/>
+  <result column="category_id" property="categoryId"/>
+  <result column="storage_code" property="storageCode"/>
+  <result column="registered_date" property="registeredDate"/>
+  <association property="category" resultMap="category"/>
+  <association property="storage" resultMap="storage"/>
 </resultMap>
 
 <resultMap type="com.example.demo.model.Category" id="category">
   <id column="category_id" property="categoryId"/>
   <result column="category_name" property="categoryName"/>
+</resultMap>
+
+<resultMap type="com.example.demo.model.Storage" id="storage">
+  <id column="storage_code" property="storageCode"/>
+  <result column="storage_name" property="storageName"/>
 </resultMap>
 
 <insert id="insertOne">
@@ -25,30 +43,35 @@
   clothe_image,
   clothe_name,
   category_id,
-  storage,
+  storage_code,
   registered_date
   )values(
   #{clotheId},
   #{clotheImage},
   #{clotheName},
   #{categoryId},
-  #{storage},
+  #{storageCode},
   CURRENT_DATE())
   
 </insert>
 
 <select id="findMany" resultMap="clothe">
-    SELECT clothe_id, clothe_name, clothes.category_id, registered_date, storage, categories.category_id, category_name FROM clothes
-    LEFT OUTER JOIN categories ON clothes.category_id = categories.category_id
+    SELECT clothe_id, clothe_name, clothes.category_id, registered_date, clothes.storage_code, categories.category_id, category_name, storages.storage_code, storage_name FROM clothes
+    INNER JOIN categories ON clothes.category_id = categories.category_id
+    INNER JOIN storages ON clothes.storage_code = storages.storage_code
     <where>
       <if test="clotheName != null">
         clothe_name LIKE CONCAT('%',#{clotheName},'%') OR categories.category_name LIKE CONCAT('%',#{clotheName},'%')
       </if>
     </where>
+    ORDER BY clothe_id
 </select>
 
-<select id="findOne" resultType="Clothe">
-    SELECT * from clothes where clothe_id = #{clotheId}
+<select id="findOne" resultMap="clotheOne">
+    SELECT * FROM clothes
+    INNER JOIN storages ON clothes.storage_code = storages.storage_code
+    INNER JOIN categories ON clothes.category_id = categories.category_id
+    WHERE clothe_id = #{clotheId}
 </select>
 
 <select id="getMaxId" resultType="String">
@@ -60,7 +83,7 @@
 </select>
 
 <update id="updateOne">
-    UPDATE clothes SET clothe_name = #{clotheName}, category_id = #{categoryId}, storage = #{storage} WHERE clothe_id = #{clotheId}
+    UPDATE clothes SET clothe_name = #{clotheName}, category_id = #{categoryId}, storage_code = #{storageCode} WHERE clothe_id = #{clotheId}
 </update>
 
 <delete id="deleteOne">
@@ -78,4 +101,26 @@
 <select id="getAllCategoriesExceptOne" resultType="Category">
     SELECT * FROM categories WHERE category_id != #{excludedId} ORDER BY category_name
 </select>
+
+<select id="getAllStorages" resultType="Storage">
+    SELECT * FROM storages ORDER BY storage_name;
+</select>
+
+<select id="getStorageOne" resultType="Storage">
+    SELECT * FROM storages WHERE storage_name = #{storageName};
+</select>
+
+<select id="getStoragesMaxCode" resultType="String">
+    select max(storage_code) from storages
+</select>
+
+<insert id="insertStorageOne">
+  insert into storages(
+  storage_code,
+  storage_name
+  )values(
+  #{storageCode},
+  #{storageName})
+</insert>
+
 </mapper>

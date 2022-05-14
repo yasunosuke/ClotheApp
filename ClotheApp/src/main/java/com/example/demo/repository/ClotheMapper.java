@@ -7,6 +7,7 @@ import org.apache.ibatis.annotations.Param;
 
 import com.example.demo.model.Category;
 import com.example.demo.model.Clothe;
+import com.example.demo.model.Storage;
 
 @Mapper
 public interface ClotheMapper {
@@ -30,4 +31,12 @@ public interface ClotheMapper {
 	public Category getOneCategory(@Param("categoryId") String categoryId);
 	
 	public List<Category> getAllCategoriesExceptOne(@Param("excludedId") String excludedId);
+	
+	public List<Storage> getAllStorages();
+	
+	public Storage getStorageOne(String storageName);
+	
+	public String getStoragesMaxCode();
+	
+	public int insertStorageOne(Storage storage);
 }

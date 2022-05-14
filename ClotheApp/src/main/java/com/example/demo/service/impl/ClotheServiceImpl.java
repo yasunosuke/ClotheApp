@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 
 import com.example.demo.model.Category;
 import com.example.demo.model.Clothe;
+import com.example.demo.model.Storage;
 import com.example.demo.repository.ClotheMapper;
 import com.example.demo.service.ClotheService;
 
@@ -103,6 +104,40 @@ public class ClotheServiceImpl implements ClotheService{
 	public List<Category> getAllCategoriesExceptOne(String excludedId) {
 		// TODO Auto-generated method stub
 		return mapper.getAllCategoriesExceptOne(excludedId);
+	}
+
+	@Override
+	public List<Storage> getAllStorages() {
+		// TODO Auto-generated method stub
+		return mapper.getAllStorages();
+	}
+
+	@Override
+	public Storage getStorageOne(String storageName) {
+		// TODO Auto-generated method stub
+		return mapper.getStorageOne(storageName);
+	}
+
+	@Override
+	public String getStorageCodeForRegistration() {
+		
+		return plusNToString(mapper.getStoragesMaxCode(), 1);
+	}
+	
+	private String plusNToString(String stringNum, Integer num) {
+		
+		if(stringNum == null) {
+			return "1";
+		} else {
+			Integer calculated = Integer.parseInt(stringNum) + num;
+			return calculated.toString();
+		}
+	}
+
+	@Override
+	public void registerStorageOne(Storage storage) {
+		// TODO Auto-generated method stub
+		mapper.insertStorageOne(storage);
 	}
 	
 	

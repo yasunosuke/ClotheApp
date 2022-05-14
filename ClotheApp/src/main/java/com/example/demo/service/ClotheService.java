@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.example.demo.model.Category;
 import com.example.demo.model.Clothe;
+import com.example.demo.model.Storage;
 
 public interface ClotheService {
 	
@@ -26,4 +27,12 @@ public interface ClotheService {
 	public Category getOneCategory(String profileCategoryId);
 	
 	public List<Category> getAllCategoriesExceptOne(String excludedId);
+	
+	public List<Storage> getAllStorages();
+	
+	public Storage getStorageOne(String storageName);
+	
+	public String getStorageCodeForRegistration();
+	
+	public void registerStorageOne(Storage storage);
 }
