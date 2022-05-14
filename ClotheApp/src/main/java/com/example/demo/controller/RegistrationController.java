@@ -18,6 +18,7 @@ import org.springframework.web.multipart.MultipartFile;
 import com.example.demo.form.ClotheRegistrationForm;
 import com.example.demo.model.Category;
 import com.example.demo.model.Clothe;
+import com.example.demo.model.Storage;
 import com.example.demo.service.ClotheService;
 
 import lombok.extern.slf4j.Slf4j;
@@ -40,6 +41,9 @@ public class RegistrationController {
 		List<Category> categoryList = clotheService.getAllCategories();
 		model.addAttribute("categoryList", categoryList);
 		
+		List<Storage> storageList = clotheService.getAllStorages();
+		model.addAttribute("allStorages", storageList);
+		
 		return "clothe/registration";
 	}
 	
@@ -59,6 +63,7 @@ public class RegistrationController {
 		byte[] image;
 		try {
 			image = uploadedImage.getBytes();
+			log.info("byte抽出済み");
 		} catch (IOException e) {
 			e.printStackTrace();
 			log.info("getting bytes from image failed");
@@ -68,6 +73,22 @@ public class RegistrationController {
 //		登録するIDを取得
 		String registrationClotheId = clotheService.getRegistrationId();
 		
+//		storageCode を　database　insert するための処理
+		String sentStorageName = form.getStorageName();
+		/* storages にデータがあるかの問い合わせ */
+		Storage storage = clotheService.getStorageOne(sentStorageName);
+		
+		if (storage != null) { /* 新たに登録する必要がない場合 / 上でデータがあった場合 */
+			form.setStorageCode(storage.getStorageCode());
+		} else {/* storages に新たに storageName, storageCode を登録 */
+			String storageCode = clotheService.getStorageCodeForRegistration();
+			storage = new Storage();
+			storage.setStorageCode(storageCode);
+			storage.setStorageName(sentStorageName);
+			clotheService.registerStorageOne(storage);
+			form.setStorageCode(storageCode);
+		}
+			
 //		data　をセット
 		form.setClotheId(registrationClotheId);
 		form.setClotheImage(image);
@@ -85,3 +106,4 @@ public class RegistrationController {
 		return "redirect:/index";
 	}
 }		
+		
