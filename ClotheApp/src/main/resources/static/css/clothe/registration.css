@@ -62,7 +62,9 @@ body {
 }
 
 .form-group select {
-	width: 100px;
+	height: 30px;
+	width: 130px;
+	font-size: 20px;
 }
 
 .registration-button {

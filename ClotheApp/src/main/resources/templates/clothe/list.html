@@ -28,7 +28,7 @@ layout:decorate="~{layout/layout}">
 					<div class="search">
 						<div class="search-container">
 							<form th:action="@{/index}" method="post" th:object="${clotheSearchForm}">
-								<input class="search-input" type="text" th:field="*{clotheName}" placeholder="Enter keyword"> 
+								<input class="search-input" type="search" th:field="*{clotheName}" placeholder="Enter keyword"> 
 								<input class="search-button" type="submit" value="search" name="search">
 							</form>
 						</div>
@@ -77,7 +77,7 @@ layout:decorate="~{layout/layout}">
 									    <img class="clothe-icon" th:src="@{'/images/'+ ${item.category.categoryName} + '-icon.png'}">
 									</td>
 									<td th:text="${item.clotheName}"></td>
-									<td th:text="${item.storage}"></td>
+									<td th:text="${item.storage.storageName}"></td>
 									<!-- <td th:text="${#dates.format(item.registeredDate,'YYYY/MM/dd')}"></td> -->
 									<td>
 										<form action="/index" method="post">
