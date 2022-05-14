@@ -8,6 +8,8 @@ import javax.validation.constraints.NotNull;
 
 import org.springframework.format.annotation.DateTimeFormat;
 
+import com.example.demo.model.Storage;
+
 import lombok.Data;
 
 @Data
@@ -22,12 +24,9 @@ public class ClotheRegistrationForm {
 	
 	private String categoryId;
 	
+	private String storageCode;
+
 	@NotBlank
-	private String storage;
-	
-	/*
-	 * @DateTimeFormat(pattern = "yyyy/MM/dd")
-	 * 
-	 * @NotNull private Date registeredDate;
-	 */
+	private String storageName;
+
 }
