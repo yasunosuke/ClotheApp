@@ -17,6 +17,7 @@ import com.example.demo.form.ClotheDetailForm;
 import com.example.demo.form.ClotheSearchForm;
 import com.example.demo.model.Category;
 import com.example.demo.model.Clothe;
+import com.example.demo.model.Storage;
 import com.example.demo.service.ClotheService;
 
 import lombok.extern.slf4j.Slf4j;
@@ -47,7 +48,8 @@ public class IndexController {
 		log.info(updatedClotheId + "updated");
 		Clothe clothe;
 		if(updatedClotheId.equals("")) {
-			clothe = clotheService.getClotheOne(clotheService.getMinId());
+			clothe = clotheService.getClotheOne(clotheService.getMinId()); 
+//			clothe = clotheList.get(0);
 		} else {
 			clothe = clotheService.getClotheOne(updatedClotheId);/* update後 */
 		}
@@ -56,18 +58,12 @@ public class IndexController {
 //		詳細画面(clothe profile画面)のdataを登録
 		ClotheDetailForm clotheDetailForm = modelMapper.map(clothe, ClotheDetailForm.class);
 		model.addAttribute("clotheDetailForm", clotheDetailForm);
-		addAttributeForDropDownMenu(model, clotheDetailForm);
 		
-//		取得したbinaryをエンコード
-//		byte[] imageBytes = clothe.getClotheImage();
-//		if(imageBytes != null) {
-//			String base64Data = Base64.getEncoder().encodeToString(imageBytes);
-//			model.addAttribute("clotheProfileImage", base64Data);
-//		} else {
-//			model.addAttribute("clotheProfileImage", null);
-//		}
+		addAttributeForDropDownMenu(model, clotheDetailForm.getCategoryId()); 
 		
 		model.addAttribute("clotheProfileImage", encodeClotheImage(clothe));
+		
+		model.addAttribute("allStorages", getAllStorages());
 		
 		return "layout/layout";
 	}
@@ -82,17 +78,10 @@ public class IndexController {
 		ClotheDetailForm clotheDetailForm = modelMapper.map(clothe, ClotheDetailForm.class);
 		model.addAttribute("clotheDetailForm", clotheDetailForm);
 		
-//      取得したbinaryデータを変換して登録		
-//		byte[] imageBytes = clothe.getClotheImage();
-//		if(imageBytes != null) {
-//			String base64Data = Base64.getEncoder().encodeToString(imageBytes);
-//			model.addAttribute("clotheProfileImage", base64Data);
-//		}
-		
 		model.addAttribute("clotheProfileImage", encodeClotheImage(clothe));
 		
 //		詳細画面の　drop down list　のためのすべての　category　取得、登録
-		addAttributeForDropDownMenu(model, clotheDetailForm);
+		addAttributeForDropDownMenu(model, clotheDetailForm.getCategoryId());
 		
 //      detail button 押下後も押下前の検索状態を維持するための処理
 		form.setClotheName(searchWord);
@@ -103,6 +92,8 @@ public class IndexController {
 //		検索で見つかった服の数取得、登録(list 上部に表示)
 		Integer clotheNum = clotheList.size();
 		model.addAttribute("clotheNum", clotheNum.toString());
+		
+		model.addAttribute("allStorages", getAllStorages());
 		
 //		search form の検索ワード消去
 //		form.setClotheName(null);
@@ -122,6 +113,23 @@ public class IndexController {
 		if (!drop.equals(form.getCategoryId())) {/* categoryを変更していた場合 */
 			form.setCategoryId(drop);
 		}
+		
+//		storageName変更のための処理
+		String sentStorageName = form.getStorage().getStorageName();
+		/* storages にデータがあるかの問い合わせ */
+		Storage storage = clotheService.getStorageOne(sentStorageName);
+		
+		if (storage != null) { /* 新たに登録する必要がない場合 / 上でデータがあった場合 */
+			form.setStorageCode(storage.getStorageCode());
+		} else {/* storages に新たに storageName, storageCode を登録 */
+			String storageCode = clotheService.getStorageCodeForRegistration();
+			storage = new Storage();
+			storage.setStorageCode(storageCode);
+			storage.setStorageName(sentStorageName);
+			clotheService.registerStorageOne(storage);
+			form.setStorageCode(storageCode);
+		}
+			
 		
 		Clothe clothe = modelMapper.map(form, Clothe.class);
 		clotheService.updateClotheOne(clothe);
@@ -159,32 +167,25 @@ public class IndexController {
 		model.addAttribute("clotheDetailForm", clotheDetailForm);
 		
 //		詳細画面の　drop down list　のためのすべての　category　取得、登録
-		addAttributeForDropDownMenu(model, clotheDetailForm);
+		addAttributeForDropDownMenu(model, clotheDetailForm.getCategoryId());
 		
 //		image取得、エンコード(clotheListのClotheにはimageが含まれていないため取得する)
 		Clothe clotheForEncode = clotheService.getClotheOne(clotheForDetail.getClotheId());
-//		byte[] imageBytes = clotheForEncode.getClotheImage();
-//		if(imageBytes != null) {
-//			String base64Data = Base64.getEncoder().encodeToString(imageBytes);
-//			model.addAttribute("clotheProfileImage", base64Data);
-//		}
+
 		model.addAttribute("clotheProfileImage", encodeClotheImage(clotheForEncode));
+		
+		model.addAttribute("allStorages", getAllStorages());
 		
 		return "layout/layout";
 	}
 	
 	
-//	詳細画面の　drop down list　のためのすべての　category　取得、登録のためのメソッド
-	private void addAttributeForDropDownMenu(Model model, ClotheDetailForm clotheDetailForm) {
-		
-//		詳細画面に表示するprofileのcategoryIdとcategoryNameを取得してmodelに登録
-		String profileCategoryId = clotheDetailForm.getCategoryId();
-		Category profileCategory = clotheService.getOneCategory(profileCategoryId);
-		model.addAttribute("profileCategory", profileCategory);
+//	詳細画面の　drop down list　のための　categoryName　取得、登録のためのメソッド
+	private void addAttributeForDropDownMenu(Model model, String detailCategoryId) {
 		
 //		詳細画面に表示するprofile以外全てのcategoryのrowを取得してmodelに登録する
-		List<Category> allCategories = clotheService.getAllCategoriesExceptOne(profileCategoryId);
-		model.addAttribute("categoryList", allCategories);
+		List<Category> allCategoriesExceptOne = clotheService.getAllCategoriesExceptOne(detailCategoryId);
+		model.addAttribute("categoryList", allCategoriesExceptOne);
 	}
 	
 	
@@ -208,6 +209,10 @@ public class IndexController {
 			return "no image";
 		}
 			
+	}
+	
+	private List<Storage> getAllStorages() {
+		return clotheService.getAllStorages();
 	}
 	
 }
