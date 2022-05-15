@@ -21,7 +21,7 @@
 				    <!--data があるとき  -->
 					<div class="profile-form"
 						th:if="${clotheDetailForm.clotheId != '0'}">
-						<form method="post" th:action="@{/index}"
+						<form method="post" th:action="@{/}"
 							th:object="${clotheDetailForm}">
 							<input type="hidden" th:field="*{clotheId}"> <input
 								type="hidden" th:field="*{categoryId}">

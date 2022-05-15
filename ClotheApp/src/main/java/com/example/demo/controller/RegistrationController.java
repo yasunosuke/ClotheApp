@@ -34,7 +34,7 @@ public class RegistrationController {
 	private ModelMapper modelMapper;
 	
 		
-	@GetMapping("/index/registration")
+	@GetMapping("/registration")
 	public String getRegistration(@ModelAttribute ClotheRegistrationForm form, Model model) {
 		
 		//	drop down list のために　category を取得する	
@@ -48,7 +48,7 @@ public class RegistrationController {
 	}
 	
 //  registration form に入力した値 database　に登録するためのメソッド
-	@PostMapping("/index/registration")
+	@PostMapping("/registration")
 	public String postClotheRegistrationForm(Model model, @ModelAttribute @Validated ClotheRegistrationForm form, 
 			BindingResult bindingResult, @RequestParam("upload-clothe-image") MultipartFile uploadedImage,
 			@RequestParam("drop-down-category-registration") String dropDownItem) {
@@ -103,7 +103,7 @@ public class RegistrationController {
 //		redirectAttributes.addFlashAttribute("registeredSuccessMessage",
 //				"You successfully uploaded " + file.getOriginalFilename() + "!");
 		
-		return "redirect:/index";
+		return "redirect:/";
 	}
 }		
 		

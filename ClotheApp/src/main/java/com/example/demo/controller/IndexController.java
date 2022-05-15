@@ -19,6 +19,7 @@ import com.example.demo.model.Category;
 import com.example.demo.model.Clothe;
 import com.example.demo.model.Storage;
 import com.example.demo.service.ClotheService;
+import com.example.demo.utility.ImageUtility;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -32,12 +33,14 @@ public class IndexController {
 	@Autowired
 	private ModelMapper modelMapper;
 	
-	@GetMapping("/index")
+	@Autowired
+	private ImageUtility imageUtility;
+	
+	@GetMapping("/")
 	public String getClotheList(@ModelAttribute ClotheSearchForm form, Model model, @ModelAttribute("updatedClotheId") String updatedClotheId) {
 		
 //		すべてのclothesの行を取得
-		Clothe c = modelMapper.map(form, Clothe.class);
-		List<Clothe> clotheList = clotheService.getClothes(c);
+		List<Clothe> clotheList = clotheService.getClothes(modelMapper.map(form, Clothe.class));
 		model.addAttribute("clotheList", clotheList);
 		
 //		見つかったClotheの数
@@ -45,7 +48,7 @@ public class IndexController {
 		model.addAttribute("clotheNum", clotheNum);
 
 //		詳細画面(clothe profile画面)のdata取得
-		log.info(updatedClotheId + "updated");
+//		log.info(updatedClotheId + "updated");
 		Clothe clothe;
 		if(updatedClotheId.equals("")) {
 			clothe = clotheService.getClotheOne(clotheService.getMinId()); 
@@ -53,15 +56,17 @@ public class IndexController {
 		} else {
 			clothe = clotheService.getClotheOne(updatedClotheId);/* update後 */
 		}
-		updatedClotheId = "";
+//		updatedClotheId = "";
 		
 //		詳細画面(clothe profile画面)のdataを登録
 		ClotheDetailForm clotheDetailForm = modelMapper.map(clothe, ClotheDetailForm.class);
 		model.addAttribute("clotheDetailForm", clotheDetailForm);
 		
-		addAttributeForDropDownMenu(model, clotheDetailForm.getCategoryId()); 
+		model.addAttribute("categoryList", getAllCategoriesExcept(clotheDetailForm.getCategoryId()));
 		
-		model.addAttribute("clotheProfileImage", encodeClotheImage(clothe));
+//		addAttributeForDropDownMenu(model, clotheDetailForm.getCategoryId()); 
+		
+		model.addAttribute("clotheProfileImage", imageUtility.encodeClotheImage(clothe));
 		
 		model.addAttribute("allStorages", getAllStorages());
 		
@@ -70,7 +75,7 @@ public class IndexController {
 		
 		
 //  リストの詳細ボタンを押して詳細画面を表示するためのメソッド
-	@PostMapping(value = "/index", params = "detail")
+	@PostMapping(value = "/", params = "detail")
 	public String getClotheDetail(@ModelAttribute ClotheSearchForm form, @RequestParam("id") String str, @RequestParam("searchWord") String searchWord, Model model) {
 		
 //		detail button　を押したリストの行の data を取得、登録
@@ -78,20 +83,19 @@ public class IndexController {
 		ClotheDetailForm clotheDetailForm = modelMapper.map(clothe, ClotheDetailForm.class);
 		model.addAttribute("clotheDetailForm", clotheDetailForm);
 		
-		model.addAttribute("clotheProfileImage", encodeClotheImage(clothe));
+		model.addAttribute("clotheProfileImage", imageUtility.encodeClotheImage(clothe));
 		
 //		詳細画面の　drop down list　のためのすべての　category　取得、登録
-		addAttributeForDropDownMenu(model, clotheDetailForm.getCategoryId());
+		model.addAttribute("categoryList", getAllCategoriesExcept(clotheDetailForm.getCategoryId()));
+//		addAttributeForDropDownMenu(model, clotheDetailForm.getCategoryId());
 		
 //      detail button 押下後も押下前の検索状態を維持するための処理
 		form.setClotheName(searchWord);
-		Clothe c = modelMapper.map(form, Clothe.class);
-		List<Clothe> clotheList = clotheService.getClothes(c);
+		List<Clothe> clotheList = getClothes(modelMapper.map(form, Clothe.class));
 		model.addAttribute("clotheList", clotheList);
 		
 //		検索で見つかった服の数取得、登録(list 上部に表示)
-		Integer clotheNum = clotheList.size();
-		model.addAttribute("clotheNum", clotheNum.toString());
+		model.addAttribute("clotheNum", getFoundItemNumber(clotheList));
 		
 		model.addAttribute("allStorages", getAllStorages());
 		
@@ -103,7 +107,7 @@ public class IndexController {
 	
 	
 //	詳細画面のUPDATE BUTTON　押下後の更新処理のためのメソッド
-	@PostMapping(value = "/index", params = "update")
+	@PostMapping(value = "/", params = "update")
 	public String updateClotheOne(ClotheDetailForm form, Model model, @RequestParam("drop") String drop, RedirectAttributes redirectAttributes) {
 		
 //		更新したrowのclotheIdをgetClotheList（）に渡して詳細画面に表示するため登録(UPDATE後も同じ詳細画面にとどまるため)
@@ -134,27 +138,27 @@ public class IndexController {
 		Clothe clothe = modelMapper.map(form, Clothe.class);
 		clotheService.updateClotheOne(clothe);
 		
-		return "redirect:/index";
+		return "redirect:/";
 	}
 	
 	
 //	詳細画面の　DELETE BUTTON　押下後削除処理のためのメソッド
-	@PostMapping(value = "/index", params = "delete")
+	@PostMapping(value = "/", params = "delete")
 	public String deleteClothe(ClotheDetailForm form, Model model) {
 		
 		clotheService.deleteClotheOne(form.getClotheId());
 		
-		return "redirect:/index";
+		return "redirect:/";
 	}
 	
 	
 //	リストの検索処理のためのメソッド
-	@PostMapping(value= "/index", params = "search")
+	@PostMapping(value= "/", params = "search")
 	public String searchClotheList(@ModelAttribute ClotheSearchForm form, Model model) {
 		
 //		
 		Clothe clothe = modelMapper.map(form, Clothe.class);
-		List<Clothe> clotheList = clotheService.getClothes(clothe);
+		List<Clothe> clotheList = getClothes(clothe);
 		model.addAttribute("clotheList", clotheList);
 		
 //		検索で見つかった服の数取得、登録
@@ -167,12 +171,13 @@ public class IndexController {
 		model.addAttribute("clotheDetailForm", clotheDetailForm);
 		
 //		詳細画面の　drop down list　のためのすべての　category　取得、登録
-		addAttributeForDropDownMenu(model, clotheDetailForm.getCategoryId());
+		model.addAttribute("categoryList", getAllCategoriesExcept(clotheDetailForm.getCategoryId()));
+//		addAttributeForDropDownMenu(model, clotheDetailForm.getCategoryId());
 		
 //		image取得、エンコード(clotheListのClotheにはimageが含まれていないため取得する)
 		Clothe clotheForEncode = clotheService.getClotheOne(clotheForDetail.getClotheId());
 
-		model.addAttribute("clotheProfileImage", encodeClotheImage(clotheForEncode));
+		model.addAttribute("clotheProfileImage", imageUtility.encodeClotheImage(clotheForEncode));
 		
 		model.addAttribute("allStorages", getAllStorages());
 		
@@ -180,12 +185,16 @@ public class IndexController {
 	}
 	
 	
-//	詳細画面の　drop down list　のための　categoryName　取得、登録のためのメソッド
-	private void addAttributeForDropDownMenu(Model model, String detailCategoryId) {
-		
-//		詳細画面に表示するprofile以外全てのcategoryのrowを取得してmodelに登録する
-		List<Category> allCategoriesExceptOne = clotheService.getAllCategoriesExceptOne(detailCategoryId);
-		model.addAttribute("categoryList", allCategoriesExceptOne);
+////	詳細画面の　drop down list　のための　categoryName　取得、登録のためのメソッド
+//	private void addAttributeForDropDownMenu(Model model, String detailCategoryId) {
+//		
+////		詳細画面に表示するprofile以外全てのcategoryのrowを取得してmodelに登録する
+//		List<Category> allCategoriesExceptOne = clotheService.getAllCategoriesExceptOne(detailCategoryId);
+//		model.addAttribute("categoryList", allCategoriesExceptOne);
+//	}
+	
+	private List<Category> getAllCategoriesExcept(String categoryId) {
+		return clotheService.getAllCategoriesExceptOne(categoryId);
 	}
 	
 	
@@ -200,19 +209,12 @@ public class IndexController {
 		}
 	}
 	
-	
-	private String encodeClotheImage(Clothe clothe) {
-		byte[] imageBytes = clothe.getClotheImage();
-		if(imageBytes != null) {
-			return Base64.getEncoder().encodeToString(imageBytes);
-		} else {
-			return "no image";
-		}
-			
-	}
-	
 	private List<Storage> getAllStorages() {
 		return clotheService.getAllStorages();
+	}
+	
+	private List<Clothe> getClothes(Clothe clothe) {
+		return clotheService.getClothes(clothe);
 	}
 	
 }

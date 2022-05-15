@@ -27,7 +27,7 @@ layout:decorate="~{layout/layout}">
 					<!-- 検索フォーム -->
 					<div class="search">
 						<div class="search-container">
-							<form th:action="@{/index}" method="post" th:object="${clotheSearchForm}">
+							<form th:action="@{/}" method="post" th:object="${clotheSearchForm}">
 								<input class="search-input" type="search" th:field="*{clotheName}" placeholder="Enter keyword"> 
 								<input class="search-button" type="submit" value="search" name="search">
 							</form>
@@ -36,7 +36,7 @@ layout:decorate="~{layout/layout}">
 					<!-- 新規登録ボタン -->
 					<div class="new-registration">
 						<div class="new-registration-container">
-							<a th:href="@{/index/registration}">
+							<a th:href="@{/registration}">
 								<button type="button">+NEW</button>
 							</a>
 						</div>
@@ -80,7 +80,7 @@ layout:decorate="~{layout/layout}">
 									<td th:text="${item.storage.storageName}"></td>
 									<!-- <td th:text="${#dates.format(item.registeredDate,'YYYY/MM/dd')}"></td> -->
 									<td>
-										<form action="/index" method="post">
+										<form action="/" method="post">
 											<input type="hidden" name="id" th:value="${item.clotheId}">
 											<input type="hidden" name="searchWord"
 												th:value="${clotheSearchForm.clotheName}"> <input class="detail-button"
